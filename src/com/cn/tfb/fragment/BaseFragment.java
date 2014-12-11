@@ -1,0 +1,8 @@
+package com.cn.tfb.fragment;
+
+import android.support.v4.app.Fragment;
+
+public class BaseFragment extends Fragment
+{
+
+}
