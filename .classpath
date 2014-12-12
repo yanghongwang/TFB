@@ -6,5 +6,6 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="lib" path="libs/javax.inject.jar"/>
+	<classpathentry kind="lib" path="libs/odps-sdk-udf-0.13.2.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

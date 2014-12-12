@@ -7,7 +7,6 @@ import com.cn.tfb.R;
 import com.cn.tfb.ioc.InjectResource;
 import com.cn.tfb.util.ShoutCutUtil;
 
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
