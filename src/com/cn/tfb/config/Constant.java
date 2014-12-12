@@ -2,6 +2,8 @@ package com.cn.tfb.config;
 
 import com.cn.tfb.dao.DaoMaster;
 import com.cn.tfb.dao.DaoSession;
+import com.cn.tfb.event.EventBus;
+import com.snappydb.DB;
 
 public class Constant
 {
@@ -18,9 +20,17 @@ public class Constant
 	public static int totalAmount = -1;
 	// 缓存DaoMaster
 	public static DaoMaster daoMaster;
+	
+	public static String DbName = "TFB_DB";
+	
+	public static String DbFileName = "TFB_FILE_DB";
 	// 缓存DaoSession
 	public static DaoSession daoSession;
+	//数据库操作
+	public static DB db;
 
+	public static EventBus eventBus;
+	
 	// 手机型号
 	public static String PhoneType;
 	// 手机分辨率

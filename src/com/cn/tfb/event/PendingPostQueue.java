@@ -7,10 +7,8 @@ final class PendingPostQueue
 
 	synchronized void enqueue(PendingPost pendingPost)
 	{
-		if (pendingPost == null)
-		{
-			throw new NullPointerException("null cannot be enqueued");
-		}
+		if (pendingPost == null) { throw new NullPointerException(
+				"null cannot be enqueued"); }
 		if (tail != null)
 		{
 			tail.next = pendingPost;

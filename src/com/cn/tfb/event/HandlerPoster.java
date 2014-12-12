@@ -32,11 +32,8 @@ final class HandlerPoster extends Handler
 			if (!handlerActive)
 			{
 				handlerActive = true;
-				if (!sendMessage(obtainMessage()))
-				{
-					throw new EventBusException(
-							"Could not send handler message");
-				}
+				if (!sendMessage(obtainMessage())) { throw new EventBusException(
+						"Could not send handler message"); }
 			}
 		}
 	}
@@ -55,6 +52,7 @@ final class HandlerPoster extends Handler
 				{
 					synchronized (this)
 					{
+						// Check again, this time in synchronized
 						pendingPost = queue.poll();
 						if (pendingPost == null)
 						{
@@ -67,11 +65,8 @@ final class HandlerPoster extends Handler
 				long timeInMethod = SystemClock.uptimeMillis() - started;
 				if (timeInMethod >= maxMillisInsideHandleMessage)
 				{
-					if (!sendMessage(obtainMessage()))
-					{
-						throw new EventBusException(
-								"Could not send handler message");
-					}
+					if (!sendMessage(obtainMessage())) { throw new EventBusException(
+							"Could not send handler message"); }
 					rescheduled = true;
 					return;
 				}

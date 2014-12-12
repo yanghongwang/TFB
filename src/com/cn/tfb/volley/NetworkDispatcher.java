@@ -2,9 +2,6 @@ package com.cn.tfb.volley;
 
 import java.util.concurrent.BlockingQueue;
 
-import android.annotation.TargetApi;
-import android.net.TrafficStats;
-import android.os.Build;
 import android.os.Process;
 
 public class NetworkDispatcher extends Thread
@@ -30,15 +27,6 @@ public class NetworkDispatcher extends Thread
 		interrupt();
 	}
 
-	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-	private void addTrafficStatsTag(Request<?> request)
-	{
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-		{
-			TrafficStats.setThreadStatsTag(request.getTrafficStatsTag());
-		}
-	}
-
 	@Override
 	public void run()
 	{
@@ -52,10 +40,7 @@ public class NetworkDispatcher extends Thread
 			}
 			catch (InterruptedException e)
 			{
-				if (mQuit)
-				{
-					return;
-				}
+				if (mQuit) { return; }
 				continue;
 			}
 
@@ -68,8 +53,6 @@ public class NetworkDispatcher extends Thread
 					request.finish("network-discard-cancelled");
 					continue;
 				}
-
-				addTrafficStatsTag(request);
 
 				NetworkResponse networkResponse = mNetwork
 						.performRequest(request);

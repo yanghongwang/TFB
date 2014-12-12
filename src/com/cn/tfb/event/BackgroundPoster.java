@@ -6,9 +6,9 @@ final class BackgroundPoster implements Runnable
 {
 
 	private final PendingPostQueue queue;
-	private volatile boolean executorRunning;
-
 	private final EventBus eventBus;
+
+	private volatile boolean executorRunning;
 
 	BackgroundPoster(EventBus eventBus)
 	{
@@ -26,7 +26,7 @@ final class BackgroundPoster implements Runnable
 			if (!executorRunning)
 			{
 				executorRunning = true;
-				EventBus.executorService.execute(this);
+				eventBus.getExecutorService().execute(this);
 			}
 		}
 	}
@@ -45,6 +45,7 @@ final class BackgroundPoster implements Runnable
 					{
 						synchronized (this)
 						{
+							// Check again, this time in synchronized
 							pendingPost = queue.poll();
 							if (pendingPost == null)
 							{

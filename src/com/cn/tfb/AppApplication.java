@@ -14,6 +14,7 @@ import com.cn.tfb.config.PropertiesConfig;
 import com.cn.tfb.dao.DaoMaster;
 import com.cn.tfb.dao.DaoMaster.OpenHelper;
 import com.cn.tfb.dao.DaoSession;
+import com.cn.tfb.event.EventBus;
 import com.cn.tfb.exception.NoSuchCommandException;
 import com.cn.tfb.ioc.Injector;
 import com.cn.tfb.log.Logger;
@@ -34,6 +35,9 @@ import com.cn.tfb.volley.RequestQueue;
 import com.cn.tfb.volley.VolleyLog;
 import com.cn.tfb.volley.util.HttpClientStack;
 import com.cn.tfb.volley.util.Volley;
+import com.esotericsoftware.kryo.Kryo;
+import com.snappydb.DBFactory;
+import com.snappydb.SnappydbException;
 
 import android.app.Application;
 import android.content.Context;
@@ -112,7 +116,24 @@ public class AppApplication extends Application implements OnClickListener,
 		getConfig();
 		registerActivity();
 		initDao();
+		createSnappyDb();
 		checkVersion();
+	}
+
+	/**
+	 * 创建键值对数据库
+	 */
+	private void createSnappyDb()
+	{
+		Kryo kryo = new Kryo();
+		try
+		{
+			Constant.db = DBFactory.open(mInstance, Constant.DbFileName, kryo);
+		}
+		catch (SnappydbException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -144,7 +165,7 @@ public class AppApplication extends Application implements OnClickListener,
 		if (Constant.daoMaster == null)
 		{
 			OpenHelper helper = new DaoMaster.DevOpenHelper(mInstance,
-					"PPmoney_db", null);
+					Constant.DbName, null);
 			Constant.daoMaster = new DaoMaster(helper.getWritableDatabase());
 		}
 		return Constant.daoMaster;
@@ -294,6 +315,7 @@ public class AppApplication extends Application implements OnClickListener,
 
 	protected void onAfterCreateApp()
 	{
+		Constant.eventBus = EventBus.getDefault();
 	}
 
 	public void initAppManager()

@@ -41,6 +41,7 @@ final class PendingPost
 		pendingPost.next = null;
 		synchronized (pendingPostPool)
 		{
+			// Don't let the pool grow indefinitely
 			if (pendingPostPool.size() < 10000)
 			{
 				pendingPostPool.add(pendingPost);

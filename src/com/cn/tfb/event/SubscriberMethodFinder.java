@@ -1,5 +1,7 @@
 package com.cn.tfb.event;
 
+import android.util.Log;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -9,28 +11,40 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import android.util.Log;
-
 class SubscriberMethodFinder
 {
-	private static final int MODIFIERS_IGNORE = Modifier.ABSTRACT
-			| Modifier.STATIC;
-	private static final Map<String, List<SubscriberMethod>> methodCache = new HashMap<String, List<SubscriberMethod>>();
-	private static final Map<Class<?>, Class<?>> skipMethodVerificationForClasses = new ConcurrentHashMap<Class<?>, Class<?>>();
+	private static final String ON_EVENT_METHOD_NAME = "onEvent";
 
-	List<SubscriberMethod> findSubscriberMethods(Class<?> subscriberClass,
-			String eventMethodName)
+	private static final int BRIDGE = 0x40;
+	private static final int SYNTHETIC = 0x1000;
+
+	private static final int MODIFIERS_IGNORE = Modifier.ABSTRACT
+			| Modifier.STATIC | BRIDGE | SYNTHETIC;
+	private static final Map<String, List<SubscriberMethod>> methodCache = new HashMap<String, List<SubscriberMethod>>();
+
+	private final Map<Class<?>, Class<?>> skipMethodVerificationForClasses;
+
+	SubscriberMethodFinder(List<Class<?>> skipMethodVerificationForClassesList)
 	{
-		String key = subscriberClass.getName() + '.' + eventMethodName;
+		skipMethodVerificationForClasses = new ConcurrentHashMap<Class<?>, Class<?>>();
+		if (skipMethodVerificationForClassesList != null)
+		{
+			for (Class<?> clazz : skipMethodVerificationForClassesList)
+			{
+				skipMethodVerificationForClasses.put(clazz, clazz);
+			}
+		}
+	}
+
+	List<SubscriberMethod> findSubscriberMethods(Class<?> subscriberClass)
+	{
+		String key = subscriberClass.getName();
 		List<SubscriberMethod> subscriberMethods;
 		synchronized (methodCache)
 		{
 			subscriberMethods = methodCache.get(key);
 		}
-		if (subscriberMethods != null)
-		{
-			return subscriberMethods;
-		}
+		if (subscriberMethods != null) { return subscriberMethods; }
 		subscriberMethods = new ArrayList<SubscriberMethod>();
 		Class<?> clazz = subscriberClass;
 		HashSet<String> eventTypesFound = new HashSet<String>();
@@ -41,14 +55,17 @@ class SubscriberMethodFinder
 			if (name.startsWith("java.") || name.startsWith("javax.")
 					|| name.startsWith("android."))
 			{
+				// Skip system classes, this just degrades performance
 				break;
 			}
 
-			Method[] methods = clazz.getMethods();
+			// Starting with EventBus 2.2 we enforced methods to be public
+			// (might change with annotations again)
+			Method[] methods = clazz.getDeclaredMethods();
 			for (Method method : methods)
 			{
 				String methodName = method.getName();
-				if (methodName.startsWith(eventMethodName))
+				if (methodName.startsWith(ON_EVENT_METHOD_NAME))
 				{
 					int modifiers = method.getModifiers();
 					if ((modifiers & Modifier.PUBLIC) != 0
@@ -58,7 +75,7 @@ class SubscriberMethodFinder
 						if (parameterTypes.length == 1)
 						{
 							String modifierString = methodName
-									.substring(eventMethodName.length());
+									.substring(ON_EVENT_METHOD_NAME.length());
 							ThreadMode threadMode;
 							if (modifierString.length() == 0)
 							{
@@ -98,6 +115,7 @@ class SubscriberMethodFinder
 							String methodKey = methodKeyBuilder.toString();
 							if (eventTypesFound.add(methodKey))
 							{
+								// Only add if not already found in a sub class
 								subscriberMethods.add(new SubscriberMethod(
 										method, threadMode, eventType));
 							}
@@ -117,7 +135,7 @@ class SubscriberMethodFinder
 		if (subscriberMethods.isEmpty())
 		{
 			throw new EventBusException("Subscriber " + subscriberClass
-					+ " has no public methods called " + eventMethodName);
+					+ " has no public methods called " + ON_EVENT_METHOD_NAME);
 		}
 		else
 		{
@@ -137,18 +155,4 @@ class SubscriberMethodFinder
 		}
 	}
 
-	static void skipMethodVerificationFor(Class<?> clazz)
-	{
-		if (!methodCache.isEmpty())
-		{
-			throw new IllegalStateException(
-					"This method must be called before registering anything");
-		}
-		skipMethodVerificationForClasses.put(clazz, clazz);
-	}
-
-	public static void clearSkipMethodVerifications()
-	{
-		skipMethodVerificationForClasses.clear();
-	}
 }

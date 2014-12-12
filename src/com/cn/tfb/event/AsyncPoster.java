@@ -1,10 +1,9 @@
 package com.cn.tfb.event;
 
-public class AsyncPoster implements Runnable
+class AsyncPoster implements Runnable
 {
 
 	private final PendingPostQueue queue;
-
 	private final EventBus eventBus;
 
 	AsyncPoster(EventBus eventBus)
@@ -18,17 +17,15 @@ public class AsyncPoster implements Runnable
 		PendingPost pendingPost = PendingPost.obtainPendingPost(subscription,
 				event);
 		queue.enqueue(pendingPost);
-		EventBus.executorService.execute(this);
+		eventBus.getExecutorService().execute(this);
 	}
 
 	@Override
 	public void run()
 	{
 		PendingPost pendingPost = queue.poll();
-		if (pendingPost == null)
-		{
-			throw new IllegalStateException("No pending post available");
-		}
+		if (pendingPost == null) { throw new IllegalStateException(
+				"No pending post available"); }
 		eventBus.invokeSubscriber(pendingPost);
 	}
 
