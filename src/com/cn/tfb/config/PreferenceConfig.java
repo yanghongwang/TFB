@@ -10,7 +10,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 /**
- * @author hzx 2014年4月21日
+ * @author hzx 2014年11月21日
  * @version V1.0
  */
 public class PreferenceConfig implements IConfig
@@ -20,7 +20,7 @@ public class PreferenceConfig implements IConfig
 	private Context mContext;
 	private Editor edit = null;
 	private SharedPreferences mSharedPreferences;
-	private String filename = "ppmoney";
+	private String filename = "EasyPay";
 	private Boolean isLoad = false;
 
 	private PreferenceConfig(Context context)

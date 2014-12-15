@@ -29,6 +29,7 @@ import com.cn.tfb.mvc.controller.NavigationDirection;
 import com.cn.tfb.mvc.view.ILayoutLoader;
 import com.cn.tfb.mvc.view.LayoutLoader;
 import com.cn.tfb.ui.BaseActivity;
+import com.cn.tfb.ui.LoginActivity;
 import com.cn.tfb.ui.SplashActivity;
 import com.cn.tfb.util.NetWorkUtil.netType;
 import com.cn.tfb.volley.RequestQueue;
@@ -81,8 +82,6 @@ public class AppApplication extends Application implements OnClickListener,
 	private AppManager mAppManager;
 	private final HashMap<String, Class<? extends BaseActivity>> registeredActivities = new HashMap<String, Class<? extends BaseActivity>>();
 	private RequestQueue requestQueue;
-	// banner ¸üÐÂµØÖ·
-	public static String IMAGEVERSIONURL = "http://appdownload.ppmoney.com/image_version.txt";
 
 	public static AppApplication getInstance()
 	{
@@ -97,7 +96,7 @@ public class AppApplication extends Application implements OnClickListener,
 	{
 		if (Constant.isOnline)
 		{
-			Constant.RUQUESTURL = "http://app.ppmoney.com:8070/api/";
+			Constant.RUQUESTURL = "http://219.137.254.35:8070/api/";
 		}
 		else
 		{
@@ -261,6 +260,7 @@ public class AppApplication extends Application implements OnClickListener,
 	private void registerActivity()
 	{
 		registerActivity(R.string.splashactivity, SplashActivity.class);
+		registerActivity(R.string.loginactivity, LoginActivity.class);
 	}
 
 	private void doOnCreate()
