@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="err_numeric_allowed">只能输入数字</string>
+    <string name="err_numeric_range_allowed">只能输入 %1$s - %2$s之间的数字</string>
+    <string name="err_contain_special_character">不能包含特殊字符</string>
+    <string name="err_are_not_allowed">输入格式不正确，请重新输入</string>
+    <string name="err_must_not_empty">输入不能为空</string>
+    <string name="err_email_not_valid">邮箱地址格式不正确</string>
+    <string name="err_creditcard_not_valid">信用卡号码格式不正确</string>
+    <string name="err_phone_not_valid">电话号码格式不正确</string>
+    <string name="err_domain_not_valid">域名格式不正确</string>
+    <string name="err_ip_not_valid">IP地址格式不正确</string>
+    <string name="err_url_not_valid">网址格式不正确</string>
+    <string name="err_not_valid_name">用户姓或名不正确</string>
+    <string name="err_not_valid_fullname">用户姓名不正确</string>
+    <string name="err_date_not_valid">日期格式不正确</string>
+
+</resources>

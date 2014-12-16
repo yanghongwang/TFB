@@ -1,22 +1,22 @@
 package com.cn.tfb.ui;
 
-import com.cn.tfb.R;
-import com.cn.tfb.config.Constant;
-import com.cn.tfb.event.type.BaseEvent;
-import com.cn.tfb.ioc.InjectView;
-import com.cn.tfb.util.InputValidateUtil;
-import com.cn.tfb.util.PhoneInfoUtil;
-import com.umeng.analytics.MobclickAgent;
-
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.cn.tfb.R;
+import com.cn.tfb.config.Constant;
+import com.cn.tfb.event.type.BaseEvent;
+import com.cn.tfb.ioc.InjectView;
+import com.cn.tfb.util.InputValidateUtil;
+import com.cn.tfb.util.PhoneInfoUtil;
+import com.cn.tfb.validate.FormEditText;
+import com.umeng.analytics.MobclickAgent;
 
 public class LoginActivity extends BaseActivity implements OnClickListener
 {
@@ -25,9 +25,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener
 	@InjectView(id = R.id.rl_back)
 	private RelativeLayout rl_back;
 	@InjectView(id = R.id.et_phone)
-	private EditText et_phone;
+	private FormEditText et_phone;
 	@InjectView(id = R.id.et_pwd)
-	private EditText et_pwd;
+	private FormEditText et_pwd;
 	@InjectView(id = R.id.btn_login)
 	private Button btn_login;
 	@InjectView(id = R.id.btn_gusture_login)
@@ -93,28 +93,35 @@ public class LoginActivity extends BaseActivity implements OnClickListener
 	{
 		phone = et_phone.getText().toString();
 		pwd = et_pwd.getText().toString();
-		if (null == phone || "".equals(phone))
+		boolean isValidate = true;
+		FormEditText[] formEditTexts =
 		{
-			shakeAnimation(et_phone);
-			return false;
-		}
-		if (!InputValidateUtil.checkPhoneNumber(phone))
+				et_phone, et_pwd
+		};
+		for (FormEditText formEditText : formEditTexts)
 		{
-			shakeAnimation(et_phone);
-			return false;
+			isValidate = formEditText.validity() && isValidate;
 		}
-		if (null == pwd || "".equals(pwd))
+		if (!isValidate)
 		{
-			shakeAnimation(et_pwd);
-			return false;
+			if (null == phone || "".equals(phone))
+			{
+				shakeAnimation(et_phone);
+			}
+			if (!InputValidateUtil.checkPhoneNumber(phone))
+			{
+				shakeAnimation(et_phone);
+			}
+			if (null == pwd || "".equals(pwd))
+			{
+				shakeAnimation(et_pwd);
+			}
+			if (!InputValidateUtil.checkPwd(pwd))
+			{
+				shakeAnimation(et_pwd);
+			}
 		}
-		if (!InputValidateUtil.checkPwd(pwd))
-		{
-			shakeAnimation(et_pwd);
-			return false;
-		}
-
-		return true;
+		return isValidate;
 	}
 
 	@Override
@@ -125,7 +132,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener
 			case R.id.btn_login:
 				if (checkInput())
 				{
-					
+
 				}
 				break;
 			case R.id.btn_gusture_login:

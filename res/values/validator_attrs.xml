@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="FormEditText">
+        <attr name="validType">
+            <enum name="regexp" value="0" />
+            <enum name="digits" value="1" />
+            <enum name="alpha" value="2" />
+            <enum name="alphaNumeric" value="3" />
+            <enum name="email" value="4" />
+            <enum name="creditCard" value="5" />
+            <enum name="phone" value="6" />
+            <enum name="domain" value="7" />
+            <enum name="ip" value="8" />
+            <enum name="url" value="9" />
+            <enum name="date" value="10" />
+            <enum name="nocheck" value="11" />
+            <enum name="empty" value="12" />
+            <enum name="custom" value="13" />
+            <enum name="person" value="14" />
+            <enum name="personfull" value="15" />
+            <enum name="pwd" value="16" />
+            <enum name="verify" value="17" />
+            <enum name="other" value="18" />
+        </attr>
+        <attr name="errMsg" format="string" />
+        <attr name="emptyMsg" format="string" />
+        <attr name="customRegexp" format="string" />
+        <attr name="customFormat" format="string" />
+        <attr name="emptyAllowed" format="boolean" />
+        <attr name="classType" format="string" />
+    </declare-styleable>
+
+</resources>
