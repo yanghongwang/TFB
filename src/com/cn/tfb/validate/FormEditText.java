@@ -43,8 +43,8 @@ public class FormEditText extends EditText
 	public FormEditText(Context context, AttributeSet attrs, int defStyle)
 	{
 		super(context, attrs, defStyle);
-		init();
 		editTextValidator = new DefaultEditTextValidator(this, attrs, context);
+		init();
 	}
 
 	/**
