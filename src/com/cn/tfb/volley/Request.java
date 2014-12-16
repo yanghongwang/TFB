@@ -1,17 +1,15 @@
 package com.cn.tfb.volley;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.Map;
-
-import com.cn.tfb.volley.VolleyLog.MarkerLog;
 
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.text.TextUtils;
+
+import com.cn.tfb.volley.VolleyLog.MarkerLog;
 
 public abstract class Request<T> implements Comparable<Request<T>>
 {
@@ -279,24 +277,18 @@ public abstract class Request<T> implements Comparable<Request<T>>
 			String paramsEncoding)
 	{
 		StringBuilder encodedParams = new StringBuilder();
-		try
+		byte[] secur = null;
+		for (Map.Entry<String, String> entry : params.entrySet())
 		{
-			for (Map.Entry<String, String> entry : params.entrySet())
-			{
-				encodedParams.append(URLEncoder.encode(entry.getKey(),
-						paramsEncoding));
-				encodedParams.append('=');
-				encodedParams.append(URLEncoder.encode(entry.getValue(),
-						paramsEncoding));
-				encodedParams.append('&');
-			}
-			return encodedParams.toString().getBytes(paramsEncoding);
+			encodedParams.append(entry.getValue());
+			String content = encodedParams.toString();
+			String index = entry.getKey();
+			byte[] data = content.getBytes();
+			secur = new byte[data.length + 1];
+			secur[0] = index.getBytes()[0];
+			System.arraycopy(data, 0, secur, 1, data.length);
 		}
-		catch (UnsupportedEncodingException uee)
-		{
-			throw new RuntimeException("Encoding not supported: "
-					+ paramsEncoding, uee);
-		}
+		return secur;
 	}
 
 	public final Request<?> setShouldCache(boolean shouldCache)

@@ -96,11 +96,11 @@ public class AppApplication extends Application implements OnClickListener,
 	{
 		if (Constant.isOnline)
 		{
-			Constant.RUQUESTURL = "http://219.137.254.35:8070/api/";
+			Constant.RUQUESTURL = "http://www.tfbpay.cn/tfb_test/sever/getapi.php";
 		}
 		else
 		{
-			Constant.RUQUESTURL = "http://219.137.254.34:8082/api/";
+			Constant.RUQUESTURL = "http://www.tfbpay.cn/tfb_test/sever/getapi.php";
 		}
 	}
 

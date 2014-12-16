@@ -1,22 +1,33 @@
 package com.cn.tfb.ui;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.StringReader;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
+import com.cn.tfb.AppApplication;
 import com.cn.tfb.R;
+import com.cn.tfb.api.ApiFucUtil;
 import com.cn.tfb.config.ActivityConstant;
 import com.cn.tfb.config.Constant;
 import com.cn.tfb.config.IConfig;
 import com.cn.tfb.config.PreferenceConfig;
+import com.cn.tfb.entity.CheckUpdateResp;
 import com.cn.tfb.event.type.BaseEvent;
 import com.cn.tfb.event.type.SubmitEvent;
 import com.cn.tfb.ioc.InjectResource;
 import com.cn.tfb.log.Logger;
+import com.cn.tfb.util.EncryptUtil;
 import com.cn.tfb.util.ShoutCutUtil;
+import com.cn.tfb.volley.Response;
+import com.cn.tfb.volley.VolleyError;
+import com.thoughtworks.xstream.XStream;
 import com.umeng.analytics.MobclickAgent;
 
 public class SplashActivity extends BaseActivity
@@ -35,6 +46,7 @@ public class SplashActivity extends BaseActivity
 		super.onCreate(savedInstanceState);
 		mActivity = this;
 		createShoutcut();
+		checkUpdate();
 		MobclickAgent.updateOnlineConfig(mActivity);
 		new Timer().schedule(new TimerTask()
 		{
@@ -47,6 +59,52 @@ public class SplashActivity extends BaseActivity
 				Constant.eventBus.post(event);
 			}
 		}, 3 * 1000);
+	}
+
+	private void checkUpdate()
+	{
+		Response.Listener<String> listener = new Response.Listener<String>()
+		{
+
+			@SuppressLint("InflateParams")
+			@Override
+			public void onResponse(String response)
+			{
+				String ecryptString = response.substring(1, response.length());
+				byte[] decrypt = ecryptString.getBytes();
+				String indexByte = response.substring(0, 1);
+				String result = EncryptUtil.decrypt(new String(decrypt),
+						Integer.parseInt(indexByte));
+				XStream xStream = new XStream();
+				StringReader reader = new StringReader(result);
+				try
+				{
+					ObjectInputStream inputStream = xStream
+							.createObjectInputStream(reader);
+					CheckUpdateResp checkUpdateResp = (CheckUpdateResp) inputStream
+							.readObject();
+				}
+				catch (IOException e)
+				{
+					e.printStackTrace();
+				}
+				catch (ClassNotFoundException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		};
+		Response.ErrorListener errorListener = new Response.ErrorListener()
+		{
+
+			@Override
+			public void onErrorResponse(VolleyError error)
+			{
+			}
+
+		};
+		ApiFucUtil.checkUpdate(AppApplication.getInstance(), listener,
+				errorListener);
 	}
 
 	public void onEvent(BaseEvent event)

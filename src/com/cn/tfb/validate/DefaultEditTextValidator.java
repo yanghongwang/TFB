@@ -238,6 +238,11 @@ public class DefaultEditTextValidator implements EditTextValidator
 						TextUtils.isEmpty(errMsg) ? context.getString(R.string.err_must_not_empty)
 								: errMsg, ValidType.OTHER);
 				break;
+			case COMPARE:
+				toAdd = new SameValueValidator(editText,
+						TextUtils.isEmpty(errMsg) ? context
+								.getString(R.string.err_must_not_empty)
+								: errMsg);
 			default:
 				toAdd = new PatternValidator(
 						TextUtils.isEmpty(errMsg) ? context.getString(R.string.err_must_not_empty)

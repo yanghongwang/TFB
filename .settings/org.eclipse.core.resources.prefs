@@ -3,3 +3,6 @@ encoding//src/com/cn/tfb/json=UTF-8
 encoding//src/com/cn/tfb/json/annotation=UTF-8
 encoding//src/com/cn/tfb/json/parser=UTF-8
 encoding//src/com/cn/tfb/json/util=UTF-8
+encoding//src/com/cn/tfb/util/EncryptUtil.java=UTF-8
+encoding//src/com/cn/tfb/util/VersionUtil.java=UTF-8
+encoding//src/com/cn/tfb/xml/XmlUtil.java=UTF-8

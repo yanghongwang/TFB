@@ -4,7 +4,8 @@ public enum ValidType
 {
 	REGEXP(0), DIGITS(1), ALPHA(2), ALPHANUMERIC(3), EMAIL(4), CREDITCARD(5), PHONE(
 			6), DEMAIN(7), IP(8), URL(9), DATE(10), NOCHECK(11), EMPTY(12), CUSTOM(
-			13), PERSONE(14), PERSONFULL(15),PWD(16),VERIFY(17),OTHER(18);
+			13), PERSONE(14), PERSONFULL(15), PWD(16), VERIFY(17), OTHER(18), COMPARE(
+			19);
 	private int value = 0;
 
 	private ValidType(int value)
@@ -54,10 +55,13 @@ public enum ValidType
 				return VERIFY;
 			case 18:
 				return OTHER;
+			case 19:
+				return COMPARE;
 			default:
 				return null;
 		}
 	}
+
 	public int value()
 	{
 		return this.value;

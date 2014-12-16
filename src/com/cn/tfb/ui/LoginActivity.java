@@ -132,7 +132,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener
 			case R.id.btn_login:
 				if (checkInput())
 				{
-
+					
 				}
 				break;
 			case R.id.btn_gusture_login:
