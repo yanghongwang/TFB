@@ -22,6 +22,8 @@ public class Constant
 	public static DaoMaster daoMaster;
 
 	public static String DbName = "TFB_DB";
+	// ÇëÇó¶¯Ì¬Âë
+	public static String REQTOKEN = "Req_Token";
 
 	public static String DbFileName = "TFB_FILE_DB";
 	// »º´æDaoSession

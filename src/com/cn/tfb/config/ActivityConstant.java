@@ -8,4 +8,6 @@ public class ActivityConstant
 	public static String USERNAME = "UserName";
 	// ÊÖÊÆÃÜÂë
 	public static String GESTUREPWD = "GesturePwd";
+	// µÇÂ¼ÃÜÂë
+	public static String USERPWD = "UserPwd";
 }

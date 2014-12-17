@@ -1,6 +1,8 @@
 package com.cn.tfb.util;
 
 import android.content.Context;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
 
 import com.cn.tfb.AppApplication;
@@ -17,5 +19,13 @@ public class PhoneInfoUtil
 		}
 		return phoneNumber;
 	}
-	
+
+	public static String getMacAddress()
+	{
+		WifiManager wifi = (WifiManager) AppApplication.getInstance()
+				.getSystemService(Context.WIFI_SERVICE);
+
+		WifiInfo info = wifi.getConnectionInfo();
+		return info.getMacAddress();
+	}
 }

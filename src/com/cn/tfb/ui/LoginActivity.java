@@ -9,18 +9,33 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.cn.tfb.AppApplication;
 import com.cn.tfb.R;
+import com.cn.tfb.api.ApiFucUtil;
 import com.cn.tfb.config.Constant;
+import com.cn.tfb.config.IConfig;
+import com.cn.tfb.config.PreferenceConfig;
+import com.cn.tfb.entity.LoginRespBody;
+import com.cn.tfb.entity.RespBody;
+import com.cn.tfb.entity.RespHeader;
+import com.cn.tfb.entity.RespRetInfo;
+import com.cn.tfb.entity.ResponseEntity;
 import com.cn.tfb.event.type.BaseEvent;
 import com.cn.tfb.ioc.InjectView;
+import com.cn.tfb.log.Logger;
+import com.cn.tfb.util.EncryptUtil;
 import com.cn.tfb.util.InputValidateUtil;
 import com.cn.tfb.util.PhoneInfoUtil;
 import com.cn.tfb.validate.FormEditText;
+import com.cn.tfb.volley.Response;
+import com.cn.tfb.volley.VolleyError;
+import com.thoughtworks.xstream.XStream;
 import com.umeng.analytics.MobclickAgent;
 
 public class LoginActivity extends BaseActivity implements OnClickListener
 {
 	private final String TAG = "LoginActivity";
+	private static final String RESULTCODE = "0";
 	private LoginActivity mActivity;
 	@InjectView(id = R.id.rl_back)
 	private RelativeLayout rl_back;
@@ -116,10 +131,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener
 			{
 				shakeAnimation(et_pwd);
 			}
-			if (!InputValidateUtil.checkPwd(pwd))
-			{
-				shakeAnimation(et_pwd);
-			}
 		}
 		return isValidate;
 	}
@@ -132,7 +143,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener
 			case R.id.btn_login:
 				if (checkInput())
 				{
-					
+					login();
 				}
 				break;
 			case R.id.btn_gusture_login:
@@ -145,5 +156,64 @@ public class LoginActivity extends BaseActivity implements OnClickListener
 
 				break;
 		}
+	}
+
+	private void login()
+	{
+		Response.Listener<String> listener = new Response.Listener<String>()
+		{
+
+			@Override
+			public void onResponse(String response)
+			{
+				XStream xStream = new XStream();
+				try
+				{
+					String ecryptString = response.substring(1,
+							response.length());
+					byte[] decrypt = ecryptString.getBytes();
+					String indexByte = response.substring(0, 1);
+					String result = EncryptUtil.decrypt(new String(decrypt),
+							Integer.parseInt(indexByte));
+					Logger.d(TAG, "响应报文--->" + result);
+					xStream.addDefaultImplementation(LoginRespBody.class,
+							RespBody.class);
+					xStream.alias("operation_response", ResponseEntity.class);
+					xStream.alias("msgheader", RespHeader.class);
+					xStream.alias("retinfo", RespRetInfo.class);
+					xStream.alias("msgbody", LoginRespBody.class);
+					ResponseEntity checkUpdateResp = (ResponseEntity) xStream
+							.fromXML(result);
+					RespHeader respHeader = checkUpdateResp.getMsgheader();
+					if (RESULTCODE.equals(respHeader.getRetinfo().getRettype()))
+					{
+						String reqToken = respHeader.getReq_token();
+						IConfig config = PreferenceConfig
+								.getPreferenceConfig(mActivity);
+						config.loadConfig();
+						config.setString(Constant.REQTOKEN, reqToken);
+					}
+					else
+					{
+						btn_gusture_login.setVisibility(View.VISIBLE);
+					}
+				}
+				catch (Exception ex)
+				{
+					Logger.e(TAG, "解析XML异常");
+				}
+			}
+		};
+		Response.ErrorListener errorListener = new Response.ErrorListener()
+		{
+
+			@Override
+			public void onErrorResponse(VolleyError error)
+			{
+			}
+
+		};
+		ApiFucUtil.login(AppApplication.getInstance(), phone, pwd, listener,
+				errorListener);
 	}
 }

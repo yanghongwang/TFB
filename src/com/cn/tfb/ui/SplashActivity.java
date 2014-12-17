@@ -3,7 +3,6 @@ package com.cn.tfb.ui;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -15,11 +14,11 @@ import com.cn.tfb.config.ActivityConstant;
 import com.cn.tfb.config.Constant;
 import com.cn.tfb.config.IConfig;
 import com.cn.tfb.config.PreferenceConfig;
-import com.cn.tfb.entity.RespBody;
-import com.cn.tfb.entity.ResponseEntity;
 import com.cn.tfb.entity.CheckUpdateRespBody;
+import com.cn.tfb.entity.RespBody;
 import com.cn.tfb.entity.RespHeader;
 import com.cn.tfb.entity.RespRetInfo;
+import com.cn.tfb.entity.ResponseEntity;
 import com.cn.tfb.event.type.BaseEvent;
 import com.cn.tfb.event.type.SubmitEvent;
 import com.cn.tfb.ioc.InjectResource;
@@ -34,6 +33,7 @@ import com.umeng.analytics.MobclickAgent;
 public class SplashActivity extends BaseActivity
 {
 	private final String TAG = "SplashActivity";
+	private static final String RESULTCODE = "0";
 	@InjectResource(id = R.string.app_name)
 	private String mAppName;
 	private SplashActivity mActivity;
@@ -67,7 +67,6 @@ public class SplashActivity extends BaseActivity
 		Response.Listener<String> listener = new Response.Listener<String>()
 		{
 
-			@SuppressLint("InflateParams")
 			@Override
 			public void onResponse(String response)
 			{
@@ -80,18 +79,28 @@ public class SplashActivity extends BaseActivity
 					String indexByte = response.substring(0, 1);
 					String result = EncryptUtil.decrypt(new String(decrypt),
 							Integer.parseInt(indexByte));
-					xStream.addDefaultImplementation(CheckUpdateRespBody.class, RespBody.class);
+					Logger.d(TAG, "响应报文--->" + result);
+					xStream.addDefaultImplementation(CheckUpdateRespBody.class,
+							RespBody.class);
 					xStream.alias("operation_response", ResponseEntity.class);
 					xStream.alias("msgheader", RespHeader.class);
 					xStream.alias("retinfo", RespRetInfo.class);
 					xStream.alias("msgbody", CheckUpdateRespBody.class);
 					ResponseEntity checkUpdateResp = (ResponseEntity) xStream
 							.fromXML(result);
-					checkUpdateResp.getMsgheader();
+					RespHeader respHeader = checkUpdateResp.getMsgheader();
+					if (RESULTCODE.equals(respHeader.getRetinfo().getRettype()))
+					{
+						String reqToken = respHeader.getReq_token();
+						IConfig config = PreferenceConfig
+								.getPreferenceConfig(mActivity);
+						config.loadConfig();
+						config.setString(Constant.REQTOKEN, reqToken);
+					}
 				}
 				catch (Exception ex)
 				{
-					ex.printStackTrace();
+					Logger.e(TAG, "解析XML异常");
 				}
 			}
 		};

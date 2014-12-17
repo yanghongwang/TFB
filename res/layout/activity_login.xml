@@ -48,7 +48,7 @@
             android:maxLength="20"
             ftbEditText:emptyMsg="@string/err_pwd_empty"
             ftbEditText:errMsg="@string/err_pwd_tip"
-            ftbEditText:validType="phone" />
+            ftbEditText:validType="alphaNumeric" />
 
         <Button
             android:id="@+id/btn_login"
