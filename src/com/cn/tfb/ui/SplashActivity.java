@@ -28,6 +28,7 @@ import com.cn.tfb.util.ShoutCutUtil;
 import com.cn.tfb.volley.Response;
 import com.cn.tfb.volley.VolleyError;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.umeng.analytics.MobclickAgent;
 
 public class SplashActivity extends BaseActivity
@@ -70,7 +71,7 @@ public class SplashActivity extends BaseActivity
 			@Override
 			public void onResponse(String response)
 			{
-				XStream xStream = new XStream();
+				XStream xStream = new XStream(new DomDriver());
 				try
 				{
 					String ecryptString = response.substring(1,

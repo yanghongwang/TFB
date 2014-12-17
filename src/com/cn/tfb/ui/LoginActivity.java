@@ -30,6 +30,7 @@ import com.cn.tfb.validate.FormEditText;
 import com.cn.tfb.volley.Response;
 import com.cn.tfb.volley.VolleyError;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.umeng.analytics.MobclickAgent;
 
 public class LoginActivity extends BaseActivity implements OnClickListener
@@ -166,7 +167,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener
 			@Override
 			public void onResponse(String response)
 			{
-				XStream xStream = new XStream();
+				XStream xStream = new XStream(new DomDriver());
 				try
 				{
 					String ecryptString = response.substring(1,
