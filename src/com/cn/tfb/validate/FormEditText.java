@@ -75,18 +75,19 @@ public class FormEditText extends EditText
 			@Override
 			public void afterTextChanged(Editable s)
 			{
+				Drawable[] drawables = getCompoundDrawables();
 				// 如果输入框有文字就添加删除图片,输入框得到焦点
 				if (length() >= 1 && flag == 1)
 				{
 					// 在输入框的右边添加图片
-					setCompoundDrawablesWithIntrinsicBounds(null, null,
-							imgAble, null);
+					setCompoundDrawablesWithIntrinsicBounds(drawables[0],
+							drawables[1], imgAble, drawables[3]);
 				}
 				else
 				{
 					// 隐藏图片
-					setCompoundDrawablesWithIntrinsicBounds(null, null, null,
-							null);
+					setCompoundDrawablesWithIntrinsicBounds(drawables[0],
+							drawables[1], drawables[2], drawables[3]);
 				}
 			}
 		});
@@ -96,6 +97,7 @@ public class FormEditText extends EditText
 			@Override
 			public void onFocusChange(View v, boolean hasFocus)
 			{
+				Drawable[] drawables = getCompoundDrawables();
 				if (hasFocus)
 				{
 					// 图片显示，flag为1
@@ -104,15 +106,15 @@ public class FormEditText extends EditText
 					if (length() >= 1)
 					{
 						// 在输入框的右边添加图片
-						setCompoundDrawablesWithIntrinsicBounds(null, null,
-								imgAble, null);
+						setCompoundDrawablesWithIntrinsicBounds(drawables[0],
+								drawables[1], imgAble, drawables[3]);
 					}
 				}
 				else
 				{
 					// 隐藏图片
-					setCompoundDrawablesWithIntrinsicBounds(null, null, null,
-							null);
+					setCompoundDrawablesWithIntrinsicBounds(drawables[0],
+							drawables[1], drawables[2], drawables[3]);
 					// 图片隐藏，flag为0
 					flag = 0;
 				}
