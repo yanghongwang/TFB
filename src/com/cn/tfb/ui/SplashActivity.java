@@ -1,8 +1,5 @@
 package com.cn.tfb.ui;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.StringReader;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -18,7 +15,11 @@ import com.cn.tfb.config.ActivityConstant;
 import com.cn.tfb.config.Constant;
 import com.cn.tfb.config.IConfig;
 import com.cn.tfb.config.PreferenceConfig;
-import com.cn.tfb.entity.CheckUpdateResp;
+import com.cn.tfb.entity.RespBody;
+import com.cn.tfb.entity.ResponseEntity;
+import com.cn.tfb.entity.CheckUpdateRespBody;
+import com.cn.tfb.entity.RespHeader;
+import com.cn.tfb.entity.RespRetInfo;
 import com.cn.tfb.event.type.BaseEvent;
 import com.cn.tfb.event.type.SubmitEvent;
 import com.cn.tfb.ioc.InjectResource;
@@ -70,27 +71,27 @@ public class SplashActivity extends BaseActivity
 			@Override
 			public void onResponse(String response)
 			{
-				String ecryptString = response.substring(1, response.length());
-				byte[] decrypt = ecryptString.getBytes();
-				String indexByte = response.substring(0, 1);
-				String result = EncryptUtil.decrypt(new String(decrypt),
-						Integer.parseInt(indexByte));
 				XStream xStream = new XStream();
-				StringReader reader = new StringReader(result);
 				try
 				{
-					ObjectInputStream inputStream = xStream
-							.createObjectInputStream(reader);
-					CheckUpdateResp checkUpdateResp = (CheckUpdateResp) inputStream
-							.readObject();
+					String ecryptString = response.substring(1,
+							response.length());
+					byte[] decrypt = ecryptString.getBytes();
+					String indexByte = response.substring(0, 1);
+					String result = EncryptUtil.decrypt(new String(decrypt),
+							Integer.parseInt(indexByte));
+					xStream.addDefaultImplementation(CheckUpdateRespBody.class, RespBody.class);
+					xStream.alias("operation_response", ResponseEntity.class);
+					xStream.alias("msgheader", RespHeader.class);
+					xStream.alias("retinfo", RespRetInfo.class);
+					xStream.alias("msgbody", CheckUpdateRespBody.class);
+					ResponseEntity checkUpdateResp = (ResponseEntity) xStream
+							.fromXML(result);
+					checkUpdateResp.getMsgheader();
 				}
-				catch (IOException e)
+				catch (Exception ex)
 				{
-					e.printStackTrace();
-				}
-				catch (ClassNotFoundException e)
-				{
-					e.printStackTrace();
+					ex.printStackTrace();
 				}
 			}
 		};

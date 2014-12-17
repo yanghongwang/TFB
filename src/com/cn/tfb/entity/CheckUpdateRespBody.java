@@ -1,6 +1,9 @@
 package com.cn.tfb.entity;
 
-public class CheckUpdateRespBody extends RespBody<CheckUpdateRespBody>
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+@XStreamAlias("msgbody")
+public class CheckUpdateRespBody extends RespBody
 {
 	private static final long serialVersionUID = 1L;
 	// APP类型
@@ -17,6 +20,18 @@ public class CheckUpdateRespBody extends RespBody<CheckUpdateRespBody>
 	private String appnewcontent;
 	// 是否强制更新
 	private String appstrupdate;
+	// 改变登录模式
+	private String chargeWithoutLogin;
+
+	public String getChargeWithoutLogin()
+	{
+		return chargeWithoutLogin;
+	}
+
+	public void setChargeWithoutLogin(String chargeWithoutLogin)
+	{
+		this.chargeWithoutLogin = chargeWithoutLogin;
+	}
 
 	public String getApptype()
 	{

@@ -1,12 +1,15 @@
 package com.cn.tfb.entity;
 
-public class Response<T> extends BaseEntity
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+@XStreamAlias("operation_request")
+public class ResponseEntity extends BaseEntity
 {
 	private static final long serialVersionUID = 1L;
 	// 响应包头
 	private RespHeader msgheader;
 	// 响应包体
-	private RespBody<T> msgbody;
+	private RespBody msgbody;
 
 	public RespHeader getMsgheader()
 	{
@@ -18,12 +21,12 @@ public class Response<T> extends BaseEntity
 		this.msgheader = msgheader;
 	}
 
-	public RespBody<T> getMsgbody()
+	public RespBody getMsgbody()
 	{
 		return msgbody;
 	}
 
-	public void setMsgbody(RespBody<T> msgbody)
+	public void setMsgbody(RespBody msgbody)
 	{
 		this.msgbody = msgbody;
 	}

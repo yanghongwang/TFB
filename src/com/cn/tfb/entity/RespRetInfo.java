@@ -1,5 +1,8 @@
 package com.cn.tfb.entity;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+@XStreamAlias("retinfo")
 public class RespRetInfo extends BaseEntity
 {
 	private static final long serialVersionUID = 1L;
